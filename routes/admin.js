@@ -124,10 +124,10 @@ router.post('/categorias/deletar', (req, res) => {
 
 router.get('/postagens', (req, res) => {
   Postagem.find().lean()
-    .populate({path: 'categorias', strictPopulate: false})
+    .populate({path: 'categoria', strictPopulate: false})
     .sort({ data: 'desc' })
-    .then(() => {
-      res.render('admin/postagens', { postagens: postagens });
+    .then((postagens) => {
+      res.render('admin/postagens', { _postagens: postagens });
     })
     .catch((erro) => {
       req.flash('error_msg', 'Houve um erro ao listar as postagens'+erro);
