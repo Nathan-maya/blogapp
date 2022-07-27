@@ -15,8 +15,8 @@ const moment = require('moment');
 const usuarios = require('./routes/usuario');
 const passport = require('passport');
 require('./config/auth')(passport);
-const {eAdmin} = require('./helpers/eAdmin')
-
+const { eAdmin } = require('./helpers/eAdmin');
+const db = require('./config/db');
 
 //Configurações
 //Sessão
@@ -59,7 +59,7 @@ app.set('view engine', 'handlebars');
 //mongoose
 mongoose.Promise = global.Promise;
 mongoose
-  .connect('mongodb://localhost/blogapp')
+  .connect(db.mongoURI)
   .then(() => {
     console.log('Conectado ao MongoDB');
   })
@@ -151,12 +151,11 @@ app.get('/posts', (req, res) => {
   res.send('Página de posts');
 });
 
-app.use('/admin',eAdmin,admin);
-
+app.use('/admin', eAdmin, admin);
 
 app.use('/usuarios', usuarios);
 //Outros
-const PORT = 8081;
+const PORT = process.env.PORT || 081;
 app.listen(PORT, () => {
   console.log('Servidor Rodando!');
 });
