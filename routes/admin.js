@@ -125,7 +125,7 @@ router.post('/categorias/deletar', (req, res) => {
 router.get('/postagens', (req, res) => {
   Postagem.find()
     .lean()
-    .populate({ path: 'categoria', strictPopulate: false })
+    .populate({ path: 'categoria', strictPopulate: false }) //especificando para pegar o nome relacionado a categoria
     .sort({ data: 'desc' })
     .then((postagens) => {
       res.render('admin/postagens', { _postagens: postagens });
@@ -135,6 +135,7 @@ router.get('/postagens', (req, res) => {
       res.redirect('/admin');
     });
 });
+//QUANDO USUARIO CLICAR EM NOVA POSTAGEM:
 router.get('/postagens/add', (req, res) => {
   Categoria.find()
     .lean()
@@ -149,14 +150,17 @@ router.get('/postagens/add', (req, res) => {
       );
     });
 });
+//Mandando as informações para o banco de dados:
 router.post('/postagens/nova', (req, res) => {
   var erros = [];
+
   if (req.body.categoria == '0') {
     erros.push({ text: 'Categoria inválida, registre uma categoria' });
   }
   if (erros.length > 0) {
     res.render('/admin/addpostagem', { erros: erros });
   } else {
+    //Passando para o objeto os valores obtidos:
     const novaPostagem = {
       titulo: req.body.titulo,
       descricao: req.body.descricao,
@@ -164,10 +168,12 @@ router.post('/postagens/nova', (req, res) => {
       categoria: req.body.categoria,
       slug: req.body.slug,
     };
+    //Adicionando os valores obtidos ao banco de dados
     new Postagem(novaPostagem)
       .save()
       .then(() => {
         req.flash('success_msg', 'Postagem criada com sucesso!');
+        //redirecionando o usuario para a pagina postagens
         res.redirect('/admin/postagens');
       })
       .catch((erro) => {
@@ -179,7 +185,9 @@ router.post('/postagens/nova', (req, res) => {
       });
   }
 });
+//Editando postagem
 router.get('/postagens/edit/:id', (req, res) => {
+  //Coletando os dados e preenchendo os campos input
   Postagem.findOne({ _id: req.params.id })
     .lean()
     .then((postagem) => {
@@ -201,25 +209,44 @@ router.get('/postagens/edit/:id', (req, res) => {
       res.redirect('/admin/postagens');
     });
 });
+//Inserindo novos valores ao banco;
 router.post('/postagem/edit', (req, res) => {
   Postagem.findOne({ _id: req.body.id })
     .then((postagem) => {
-      postagem.titulo = req.body.titulo,
-      postagem.slug = req.body.slug,
-      postagem.descricao = req.body.descricao,
-      postagem.conteudo = req.body.conteudo,
-      postagem.categoria = req.body.categoria
+      (postagem.titulo = req.body.titulo),
+        (postagem.slug = req.body.slug),
+        (postagem.descricao = req.body.descricao),
+        (postagem.conteudo = req.body.conteudo),
+        (postagem.categoria = req.body.categoria);
 
-      postagem.save().then(()=>{
-        req.flash('success_msg','Postagem editada com sucesso!');
-        res.redirect('/admin/postagens');
-      }).catch((erro)=>{
-        req.flash('error_msg','Erro interno!');
-        res.redirect('/admin/postagens')
-      })
+      postagem
+        .save()
+        .then(() => {
+          req.flash('success_msg', 'Postagem editada com sucesso!');
+          //Redirecionando para pagina postagens
+          res.redirect('/admin/postagens');
+        })
+        .catch((erro) => {
+          req.flash('error_msg', 'Erro interno!');
+          res.redirect('/admin/postagens');
+        });
     })
     .catch((erro) => {
-      req.flash('error_msg', 'Houve um erro ao salvar a edição!'+erro);
+      req.flash('error_msg', 'Houve um erro ao salvar a edição!' + erro);
+      res.redirect('/admin/postagens');
+    });
+});
+
+//TREINANDO OUTRO MÉTODO DE DELETAR
+// RECOMENDADO USAR POST, GET NÃO É SEGURO
+router.get('/postagens/deletar/:id', (req, res) => {
+  Postagem.remove({ _id: req.params.id })
+    .then(() => {
+      req.flash('success_msg', 'Postagem deletada com sucesso!');
+      res.redirect('/admin/postagens');
+    })
+    .catch((error) => {
+      req.flash('error_msg', 'Houve um erro ao deletar a postagem');
       res.redirect('/admin/postagens');
     });
 });
