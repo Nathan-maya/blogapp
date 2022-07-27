@@ -12,9 +12,12 @@ const Postagem = mongoose.model('postagens');
 require('./models/Categoria');
 const Categoria = mongoose.model('categorias');
 const moment = require('moment');
-const usuarios = require('./routes/usuario')
+const usuarios = require('./routes/usuario');
+const passport = require('passport');
+require('./config/auth')(passport);
 
 //Configurações
+//Sessão
 app.use(
   session({
     secret: 'cursodenode',
@@ -22,6 +25,8 @@ app.use(
     saveUninitialized: true,
   }),
 );
+app.use(passport.initialize());
+app.use(passaport.session());
 app.use(flash());
 //Middleware
 app.use((req, res, next) => {
@@ -141,7 +146,7 @@ app.get('/posts', (req, res) => {
   res.send('Página de posts');
 });
 app.use('/admin', admin);
-app.use('/usuarios',usuarios)
+app.use('/usuarios', usuarios);
 //Outros
 const PORT = 8081;
 app.listen(PORT, () => {
