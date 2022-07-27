@@ -6,7 +6,9 @@ const admin = require('./routes/admin');
 const path = require('path'); //padrão
 const mongoose = require('mongoose');
 const session = require('express-session');
-const flash = require('connect-flash');//TIPO DE SESSAO QUE SO APARECE UMA VEZ!ao carregar msg, e recarregar pagina ele some
+const flash = require('connect-flash'); //TIPO DE SESSAO QUE SO APARECE UMA VEZ!ao carregar msg, e recarregar pagina ele some
+require('./models/Postagem');
+const Postagem = mongoose.model('postagens');
 
 //Configurações
 app.use(
@@ -44,6 +46,20 @@ mongoose
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Rotas
+app.get('/', (req, res) => {
+  Postagem.find().lean().populate('categoria').sort({data:'desc'}).then((postagens)=>{
+    res.render('index',{_postagens: postagens});
+  }).catch((erro)=>{
+    req.flash('error_msg','Houve um erro interno');
+    res.redirect('/404');
+  })
+});
+app.get('/404',(res,req)=>{
+  res.send('Error 404!');
+})
+app.get('/posts', (req, res) => {
+  res.send('Página de posts');
+});
 app.use('/admin', admin);
 //Outros
 const PORT = 8081;
