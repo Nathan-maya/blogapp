@@ -15,7 +15,7 @@
     <a href="/postagem/{{slug}}"><button class="btn btn-success">Leia Mais</button></a>
     <hr>
         <small>Categoria: {{categoria.nome}}</small>
-    <small>Data de publicação: {{data}}</small>
+    <small>Data de publicação: {{#formatDate data}}{{/formatDate}}</small>
 
   </div>
 </div>

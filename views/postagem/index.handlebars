@@ -3,7 +3,7 @@
   <div class="card-body">
     <h1>{{_postagem.titulo}}</h1>
     <hr>
-    <small>Data de publicação: {{_postagem.data}}</small> <br>
+    <small>Data de publicação: {{#formatDate _postagem.data}}{{/formatDate}}</small> <br>
     <hr>
     {{_postagem.conteudo}}
   </div>
