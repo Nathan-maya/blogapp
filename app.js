@@ -26,13 +26,14 @@ app.use(
   }),
 );
 app.use(passport.initialize());
-app.use(passaport.session());
+app.use(passport.session());
 app.use(flash());
 //Middleware
 app.use((req, res, next) => {
   // variaveis globais
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
   next();
 });
 //BODY PARSER

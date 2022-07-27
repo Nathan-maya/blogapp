@@ -12,6 +12,7 @@ module.exports = function (passport) {
     new localStrategy(
       {
         usernameField: 'email',
+        passwordField: 'senha',
       },
       (email, senha, done) => {
         Usuario.findOne({ email: email })
@@ -22,7 +23,7 @@ module.exports = function (passport) {
             }
             bcrypt.compare(senha, usuario.senha, (erro, batem) => {
               if (batem) {
-                return done(null, user);
+                return done(null, usuario);
               } else {
                 return done(null, false, { message: 'Senha incorreta!' });
               }
@@ -31,14 +32,13 @@ module.exports = function (passport) {
       },
     ),
   );
-  passport.serializeUser((usuario,done)=>{
-    done(null,usuario.id);
-  })
-  
-  passport.deserializeUser((id,done)=>{
-    User.findById(id,(erro,usuario)=>{
-      done(erro,user)
-    })
-  })
-};
+  passport.serializeUser((usuario, done) => {
+    done(null, usuario);
+  });
 
+  passport.deserializeUser((id, done) => {
+    Usuario.findById(id, (erro, usuario) => {
+      done(erro, usuario);
+    });
+  });
+};
