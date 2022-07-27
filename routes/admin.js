@@ -7,9 +7,7 @@ require('../models/Postagem');
 const Postagem = mongoose.model('postagens');
 
 
-router.get('/',(req, res) => {
-  res.render('admin/index');
-});
+
 router.get('/categorias', (req, res) => {
   //Lista todos os documentos que existem
   Categoria.find()
