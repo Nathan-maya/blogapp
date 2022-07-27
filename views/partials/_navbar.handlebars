@@ -12,12 +12,18 @@
         <li class="nav-item">
           <a class="nav-link" href="/categorias">Categoria</a>
         </li>
+        {{!-- user vem da variavel global res.locals.user --}}
+        {{#if user}}
+
+        {{else}}
+
         <li class="nav-item">
           <a class="nav-link " href="usuarios/login">Login</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link ">Cadastrar</a>
+          <a class="nav-link " href="usuarios/registro">Cadastrar</a>
         </li>
+        {{/if}}
       </ul>
 
     </div>

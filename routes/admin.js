@@ -6,7 +6,8 @@ const Categoria = mongoose.model('categorias');
 require('../models/Postagem');
 const Postagem = mongoose.model('postagens');
 
-router.get('/', (req, res) => {
+
+router.get('/',(req, res) => {
   res.render('admin/index');
 });
 router.get('/categorias', (req, res) => {
@@ -22,10 +23,10 @@ router.get('/categorias', (req, res) => {
       res.redirect('/admin');
     });
 });
-router.get('/categorias/add', (req, res) => {
+router.get('/categorias/add',(req, res) => {
   res.render('admin/addcategorias');
 });
-router.post('/categorias/nova', (req, res) => {
+router.post('/categorias/nova',(req, res) => {
   var erros = [];
   if (
     !req.body.nome ||
@@ -70,7 +71,7 @@ router.post('/categorias/nova', (req, res) => {
       });
   }
 });
-router.get('/categorias/edit/:id', (req, res) => {
+router.get('/categorias/edit/:id',(req, res) => {
   Categoria.findOne({ _id: req.params.id })
     .lean()
     .then((categoria) => {
@@ -81,7 +82,7 @@ router.get('/categorias/edit/:id', (req, res) => {
       res.redirect('/admin/categorias');
     });
 });
-router.post('/categorias/edit', (req, res) => {
+router.post('/categorias/edit',(req, res) => {
   Categoria.findOne({ _id: req.body.id })
     .then((categoria) => {
       categoria.nome = req.body.nome;

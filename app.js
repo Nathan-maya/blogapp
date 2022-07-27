@@ -15,6 +15,8 @@ const moment = require('moment');
 const usuarios = require('./routes/usuario');
 const passport = require('passport');
 require('./config/auth')(passport);
+const {eAdmin} = require('./helpers/eAdmin')
+
 
 //Configurações
 //Sessão
@@ -34,6 +36,8 @@ app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
+  //req.user é criado pelo passport
+  res.locals.user = req.user || null;
   next();
 });
 //BODY PARSER
@@ -146,7 +150,10 @@ app.get('/404', (res, req) => {
 app.get('/posts', (req, res) => {
   res.send('Página de posts');
 });
-app.use('/admin', admin);
+
+app.use('/admin',eAdmin,admin);
+
+
 app.use('/usuarios', usuarios);
 //Outros
 const PORT = 8081;
