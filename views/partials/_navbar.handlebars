@@ -14,10 +14,11 @@
         </li>
         {{!-- user vem da variavel global res.locals.user --}}
         {{#if user}}
-
+       <li class="nav-item">
+          <a class="nav-link " href="usuarios/logout">Sair</a>
+        </li>
         {{else}}
-
-        <li class="nav-item">
+       <li class="nav-item">
           <a class="nav-link " href="usuarios/login">Login</a>
         </li>
         <li class="nav-item">
