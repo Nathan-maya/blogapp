@@ -47,16 +47,35 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Rotas
 app.get('/', (req, res) => {
-  Postagem.find().lean().populate('categoria').sort({data:'desc'}).then((postagens)=>{
-    res.render('index',{_postagens: postagens});
+  Postagem.find()
+    .lean()
+    .populate('categoria')
+    .sort({ data: 'desc' })
+    .then((postagens) => {
+      res.render('index', { _postagens: postagens });
+    })
+    .catch((erro) => {
+      req.flash('error_msg', 'Houve um erro interno');
+      res.redirect('/404');
+    });
+});
+app.get('/postagem/:slug', (req, res) => {
+  Postagem.findOne({slug:req.params.slug}).lean().then((postagem)=>{
+    if(postagem){
+      res.render('postagem/index',{_postagem: postagem})
+    }else{
+      req.flash('error_msg','Esta Postagem não existe');
+      res.redirect('/')
+    }
   }).catch((erro)=>{
     req.flash('error_msg','Houve um erro interno');
-    res.redirect('/404');
-  })
+    res.redirect('/');
+  });
 });
-app.get('/404',(res,req)=>{
+
+app.get('/404', (res, req) => {
   res.send('Error 404!');
-})
+});
 app.get('/posts', (req, res) => {
   res.send('Página de posts');
 });
