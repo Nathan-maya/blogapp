@@ -59,7 +59,7 @@ app.set('view engine', 'handlebars');
 //mongoose
 mongoose.Promise = global.Promise;
 mongoose
-  .connect(db.mongoURI)
+  .connect('mongodb://localhost/blogapp')
   .then(() => {
     console.log('Conectado ao MongoDB');
   })
@@ -155,7 +155,7 @@ app.use('/admin', eAdmin, admin);
 
 app.use('/usuarios', usuarios);
 //Outros
-const PORT = process.env.PORT || 081;
+const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
   console.log('Servidor Rodando!');
 });
